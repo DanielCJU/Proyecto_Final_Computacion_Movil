@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/blakm/AndroidStudioProjects/Proyecto_Final_Computacion_Movil/app/src/main/res/drawable/btm_bg.xml" value="0.291" />
+        <entry key="..\:/Users/blakm/AndroidStudioProjects/Proyecto_Final_Computacion_Movil/app/src/main/res/drawable/input_bg.xml" value="0.291" />
+        <entry key="..\:/Users/blakm/AndroidStudioProjects/Proyecto_Final_Computacion_Movil/app/src/main/res/layout/activity_login.xml" value="0.2803442028985507" />
+        <entry key="..\:/Users/blakm/AndroidStudioProjects/Proyecto_Final_Computacion_Movil/app/src/main/res/layout/activity_registro.xml" value="0.2803442028985507" />
         <entry key="..\:/Users/casa/AndroidStudioProjects/Proyecto_Final_Computacion_Movil/app/src/main/res/layout/activity_login.xml" value="0.36666666666666664" />
       </map>
     </option>
