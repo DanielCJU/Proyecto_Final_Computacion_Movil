@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button Start = findViewById(R.id.startBtn);
         Button Add = findViewById(R.id.addBtn);
+        Button P = findViewById(R.id.Pbutton);
 
         Start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +41,24 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         dbUser.AddUser(username,password);
                         Toast.makeText(MainActivity.this,"Admin created", Toast.LENGTH_LONG).show();
+                    }
+                    dbUser.close();
+                }catch(Exception e)
+                {
+                    Toast.makeText(MainActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        P.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = "admin";
+                try{
+                    DBUserAdapter dbUser = new DBUserAdapter(MainActivity.this);
+                    dbUser.open();
+                    if(dbUser.findId(username)==1){
+                        Toast.makeText(MainActivity.this,"Funciona " +dbUser.findId(username), Toast.LENGTH_LONG).show();
+                        dbUser.close();
                     }
                     dbUser.close();
                 }catch(Exception e)

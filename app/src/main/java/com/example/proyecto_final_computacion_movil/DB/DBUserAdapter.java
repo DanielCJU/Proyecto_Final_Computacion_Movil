@@ -1,5 +1,6 @@
 package com.example.proyecto_final_computacion_movil.DB;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +8,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class DBUserAdapter
 {
@@ -17,12 +20,19 @@ public class DBUserAdapter
 
     private static final String DATABASE_NAME = "usersdb";
     private static final String DATABASE_TABLE = "users";
-    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_PTABLE = "passwords";
+    private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_CREATE =
             "create table users (_id integer primary key autoincrement, "
                     + "username text not null, "
                     + "password text not null);";
+
+    private static final String DATABASE_PASSWORD =
+            "create table passwords (pid integer primary key autoincrement, " +
+                    "_id integer not null, " +
+                    "upass text not null, " +
+                    "FOREIGN KEY(_id) REFERENCES users(_id));";
 
     private Context context = null;
     private DatabaseHelper DBHelper;
@@ -45,6 +55,7 @@ public class DBUserAdapter
         public void onCreate(SQLiteDatabase db)
         {
             db.execSQL(DATABASE_CREATE);
+            db.execSQL(DATABASE_PASSWORD);
         }
 
         @Override
@@ -54,6 +65,7 @@ public class DBUserAdapter
                     + " to "
                     + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS users");
+            db.execSQL("DROP TABLE IF EXISTS passwords");
             onCreate(db);
         }
     }
@@ -79,6 +91,20 @@ public class DBUserAdapter
 
     }
 
+    public int findId(String username) throws SQLException
+    {
+        Cursor mCursor = db.rawQuery("SELECT * FROM " + DATABASE_TABLE + " WHERE username=?", new String[]{username});
+        int UID;
+        if(mCursor != null && mCursor.moveToFirst()){
+            @SuppressLint("Range") String temp = mCursor.getString(mCursor.getColumnIndex("_id"));
+            UID = Integer.parseInt(temp);
+            mCursor.close();
+        } else {
+            return -1;
+        }
+        return UID;
+    }
+
     public boolean Login(String username, String password) throws SQLException
     {
         Cursor mCursor = db.rawQuery("SELECT * FROM " + DATABASE_TABLE + " WHERE username=? AND password=?", new String[]{username,password});
@@ -91,4 +117,36 @@ public class DBUserAdapter
         return false;
     }
 
+    public long AddPass (int UID, String upassword) throws SQLException
+    {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("_id", UID);
+        initialValues.put("upass", upassword);
+        return db.insert(DATABASE_PTABLE, null, initialValues);
+    }
+
+    public Cursor getAllPasswords(int UID) throws SQLException{
+        try{
+            Cursor mCursor = db.rawQuery("SELECT * FROM passwords WHERE _id=?", new String[]{String.valueOf(UID)});
+            if(mCursor != null){
+                return mCursor;
+            } else {
+                return null;
+            }
+        } catch(Exception e){
+            return null;
+        }
+    }
+
+    public boolean PassExists(String upass, int UID) throws SQLException
+    {
+        Cursor mCursor = db.rawQuery("SELECT * FROM " + "passwords"+ " WHERE _id=? AND upass=?", new String[]{String.valueOf(UID),upass});
+        if (mCursor != null) {
+            if(mCursor.getCount() > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

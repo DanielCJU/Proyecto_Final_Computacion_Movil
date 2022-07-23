@@ -1,6 +1,7 @@
 package com.example.proyecto_final_computacion_movil;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +36,12 @@ public class LoginActivity extends Activity
                         if(dbUser.Login(username, password))
                         {
                             Toast.makeText(LoginActivity.this,"Successfully Logged In", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent (LoginActivity.this, PassActivity.class);
+                            Bundle Identidad = new Bundle();
+                            Identidad.putInt("UserId", dbUser.findId(username));
+                            intent.putExtras(Identidad);
+                            startActivity(intent);
+                            finish();
                         }else{
                             Toast.makeText(LoginActivity.this,"Invalid Username/Password", Toast.LENGTH_LONG).show();
                         }
